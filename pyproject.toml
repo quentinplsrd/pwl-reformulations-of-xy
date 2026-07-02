@@ -1,0 +1,27 @@
+[project]
+name = "pwl-reformulations"
+version = "0.1.0"
+description = "Computational pipeline for evaluating piecewise linear reformulations of bilinear programs."
+authors = [
+    { name = "Quentin Ploussard" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "Jinja2",
+    "lxml",
+    "matplotlib",
+    "numpy",
+    "ortools==9.14.6206",
+    "pandas",
+    "pyqplib",
+    "requests",
+    "scipy"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+managed = true

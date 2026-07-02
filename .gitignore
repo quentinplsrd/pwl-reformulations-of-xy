@@ -1,0 +1,31 @@
+# Python caches and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE and Editor directories
+.vscode/
+.idea/
+.spyproject/
+.spyderproject
+*.swp
+
+# Project specific data and results
+data/instances/
+data/results/
+*.csv
+*.png
+*.pdf
+
+# OS generated files
+.DS_Store
+Thumbs.db
