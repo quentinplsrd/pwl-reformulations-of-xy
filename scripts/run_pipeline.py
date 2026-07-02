@@ -49,7 +49,7 @@ def main():
         df_experiments['Threads'] = 1
         
         # 4. Execute Workloads
-        df_exp_results = solve_experiments_in_parallel(df_experiments.iloc[:40], max_workers=16)
+        df_exp_results = solve_experiments_in_parallel(df_experiments, max_workers=16)
         
         # Save results directly to the results folder
         df_exp_results.to_csv(result_filepath)
