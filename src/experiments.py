@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import time
+from datetime import timedelta
 from contextlib import contextmanager
 
 import pyqplib
@@ -122,6 +124,9 @@ def solve_experiment_model(dict_exp, enable_output=False):
     }
 
 def solve_experiments_in_parallel(df, max_workers):
+    # Record the start time
+    start_time = time.perf_counter()
+    
     dict_experiments = df.to_dict(orient="records")
     results = []
     
@@ -156,6 +161,12 @@ def solve_experiments_in_parallel(df, max_workers):
 
     # Convert results to a DataFrame
     df_results = pd.DataFrame(results)
+    
+    # Calculate and print total execution time
+    end_time = time.perf_counter()
+    elapsed_seconds = end_time - start_time
+    formatted_time = str(timedelta(seconds=int(elapsed_seconds)))
+    print(f"\nAll experiments completed in: {formatted_time}\n", flush=True)
     
     # Define the exact sorting hierarchy
     sort_columns = [

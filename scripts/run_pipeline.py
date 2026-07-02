@@ -31,25 +31,29 @@ def main():
     # Define exact path for the CSV
     result_filepath = os.path.join(results_dir, 'Exp_results_all.csv')
     
-    if not os.path.isfile(result_filepath):
+    if os.path.isfile(result_filepath):
+        print("CSV file of the experiment results already available in directory.")
+        print("To perform new runs, please remove the CSV file.")
+        print("Skipping experimental runs and jumping to figure plotting.")
+    else:
         # Fetch and filter external data
         df_QPLIB_instances = import_QPLIB_instance_table()
         df_QPLIB_instances = down_select_valid_instances(df_QPLIB_instances)
         
-        # 2. Build the experiment table
+        # Build the experiment table
         df_experiments = build_table_of_experiments(
             qplib_instances=df_QPLIB_instances.index,
             milp_solvers=["Gurobi", "SCIP", "HiGHS"],
             qp_solvers=["Gurobi", "SCIP"]
         )
     
-        # 3. Configure Run Limits
+        # Configure Run Limits
         df_experiments['Gap tolerance'] = 0.01
         df_experiments['Time limit'] = timedelta(seconds=600)
         df_experiments['Threads'] = 1
         
-        # 4. Execute Workloads
-        df_exp_results = solve_experiments_in_parallel(df_experiments, max_workers=16)
+        # Execute Workloads
+        df_exp_results = solve_experiments_in_parallel(df_experiments.iloc[:10], max_workers=16)
         
         # Save results directly to the results folder
         df_exp_results.to_csv(result_filepath)
