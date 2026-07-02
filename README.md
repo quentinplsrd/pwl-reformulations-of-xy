@@ -6,7 +6,7 @@ The pipeline handles automated data acquisition, model generation, parallelized 
 
 ## Repository Structure
 
-\`\`\`text
+```text
 pwl-reformulations/
 ├── src/
 │   ├── data_handling.py       # External data fetching (QPLIB)
@@ -21,7 +21,7 @@ pwl-reformulations/
 │   └── results/               # Generated CSVs and figures (git-ignored)
 ├── pyproject.toml             # Project metadata and dependencies
 └── README.md
-\`\`\`
+```
 
 ## Setup and Installation
 
