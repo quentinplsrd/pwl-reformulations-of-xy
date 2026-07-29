@@ -27,24 +27,24 @@ pwl-reformulations/
 
 This project uses `uv` for fast dependency management.
 
-1. Ensure Python 3.10+ and `uv` are installed.
+1. Install `uv` by following the instructions at [docs.astral.sh/uv/getting-started/installation](https://docs.astral.sh/uv/getting-started/installation/).
 2. Clone this repository and navigate to the project root:
-   \`\`\`bash
-   git clone <your-repo-url>
-   cd pwl-reformulations
-   \`\`\`
-3. Create the virtual environment and sync dependencies:
-   \`\`\`bash
+   ```bash
+   git clone https://github.com/quentinplsrd/pwl-reformulations-of-xy
+   cd pwl-reformulations-of-xy
+   ```
+3. Create/update the projects environment with:
+   ```bash
    uv sync
-   \`\`\`
+   ```
 
 ## Execution
 
 The entire pipeline is orchestrated through a single script. Execute it from the root of the repository:
 
-\`\`\`bash
+```bash
 uv run scripts/run_pipeline.py
-\`\`\`
+```
 
 **Workflow sequence:**
 1. Validates and downloads necessary QPLIB instances to `data/instances/`.
@@ -52,3 +52,7 @@ uv run scripts/run_pipeline.py
 3. Executes models in parallel across specified solvers (Gurobi, SCIP, HiGHS).
 4. Saves raw metrics to `data/results/Exp_results_all.csv`.
 5. Generates performance profiles, efficiency grids, and approximation gap boxplots in `data/results/`.
+
+
+If Gurobi isn't installed properly (or installed at all), you will see the following message and the Gurobi solutions will be skipped.
+> Gurobi solver not detected - excluding from experiments.
