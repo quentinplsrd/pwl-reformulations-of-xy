@@ -29,22 +29,22 @@ This project uses `uv` for fast dependency management.
 
 1. Ensure Python 3.10+ and `uv` are installed.
 2. Clone this repository and navigate to the project root:
-   \`\`\`bash
+   ```bash
    git clone <your-repo-url>
    cd pwl-reformulations
-   \`\`\`
+   ```
 3. Create the virtual environment and sync dependencies:
-   \`\`\`bash
+   ```bash
    uv sync
-   \`\`\`
+   ```
 
 ## Execution
 
 The entire pipeline is orchestrated through a single script. Execute it from the root of the repository:
 
-\`\`\`bash
+```bash
 uv run scripts/run_pipeline.py
-\`\`\`
+```
 
 **Workflow sequence:**
 1. Validates and downloads necessary QPLIB instances to `data/instances/`.
