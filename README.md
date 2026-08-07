@@ -46,6 +46,8 @@ The entire pipeline is orchestrated through a single script. Execute it from the
 uv run scripts/run_pipeline.py
 ```
 
+> **⚠️ Note on Runtime:** Please be aware that the complete pipeline takes approximately **8 to 10 hours** to finish running due to the volume of instances being solved in parallel.
+
 **Workflow sequence:**
 1. Validates and downloads necessary QPLIB instances to `data/instances/`.
 2. Builds the experiment matrix.
