@@ -33,7 +33,7 @@ This project uses `uv` for fast dependency management.
    git clone https://github.com/quentinplsrd/pwl-reformulations-of-xy
    cd pwl-reformulations-of-xy
    ```
-3. Create/update the projects environment with:
+3. Create the virtual environment and sync dependencies:
    ```bash
    uv sync
    ```
@@ -52,7 +52,6 @@ uv run scripts/run_pipeline.py
 3. Executes models in parallel across specified solvers (Gurobi, SCIP, HiGHS).
 4. Saves raw metrics to `data/results/Exp_results_all.csv`.
 5. Generates performance profiles, efficiency grids, and approximation gap boxplots in `data/results/`.
-
 
 If Gurobi isn't installed properly (or installed at all), you will see the following message and the Gurobi solutions will be skipped.
 > Gurobi solver not detected - excluding from experiments.
