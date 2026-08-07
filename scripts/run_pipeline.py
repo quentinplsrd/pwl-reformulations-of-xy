@@ -16,8 +16,7 @@ from src.visualization import (
     plot_scalability,
     plot_dolan_more,
     plot_applicability,
-    plot_approx_gap,
-    generate_qplib_latex_table
+    plot_approx_gap
 )
 
 def main():
@@ -81,9 +80,6 @@ def main():
     
     print("Generating Approx Gap Plot...")
     plot_approx_gap(dataset, output_dir=results_dir)
-    
-    print("\nGenerating LaTeX Table...")
-    generate_qplib_latex_table(dataset)
     
     print(f"\nAll visualizations completed successfully. Check the {results_dir} folder.")
 
