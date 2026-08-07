@@ -10,7 +10,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 matplotlib.rcParams["axes3d.mouserotationstyle"] = "azel"
 plt.rcParams.update({
-    'font.family': 'Century Schoolbook',
+    # 'font.family': 'Century Schoolbook',
     'mathtext.fontset': 'cm',
     'mathtext.rm': 'serif',
     'mathtext.it': 'serif:italic',
@@ -196,22 +196,3 @@ def plot_approx_gap(df, output_dir="."):
     filepath = os.path.join(output_dir, "Obj_CPWL_approx_gap.png")
     plt.savefig(filepath, dpi=300, bbox_inches="tight")
     plt.close()
-
-def generate_qplib_latex_table(df):
-    # (Remains unchanged as it prints to console)
-    df_qplib = df[df['Instance family'] == 'QPLIB'].copy()
-    df_qp = df_qplib[(df_qplib['Problem type'] == 'QP') & (df_qplib['Solver'] == 'SCIP')][['Instance', 'Objective value', 'Dual bound', 'Relative gap']].rename(columns={'Objective value': 'Primal_QP', 'Dual bound': 'Dual_QP', 'Relative gap': 'Gap_QP'})
-    df_milp = df_qplib[(df_qplib['Problem type'] == 'MILP') & (df_qplib['Solver'] == 'HiGHS') & (df_qplib['CPWL representation'] == 'Square') & (df_qplib['Degree of accuracy'] == 3)][['Instance', 'Objective value', 'Dual bound', 'Relative gap']].rename(columns={'Objective value': 'Primal_MILP', 'Dual bound': 'Dual_MILP', 'Relative gap': 'Gap_MILP'})
-    
-    comp_df = pd.merge(df_qp, df_milp, on='Instance', how='inner')
-    comp_df['Gap_QP'] *= 100
-    comp_df['Gap_MILP'] *= 100
-    
-    df_latex = comp_df.set_index("Instance").sort_index()
-    df_latex.columns = pd.MultiIndex.from_tuples([("QP (SCIP)", "Primal"), ("QP (SCIP)", "Dual"), ("QP (SCIP)", r"Gap (\%)"), ("MILP (HiGHS)", "Primal"), ("MILP (HiGHS)", "Dual"), ("MILP (HiGHS)", r"Gap (\%)")])
-    
-    # latex_table = df_latex.to_latex(index=True, multicolumn=True, multicolumn_format="c", escape=False, float_format="%.2f")
-    # print("=== QPLIB LaTeX Table ===")
-    # print(latex_table)
-    print(df_latex)
-    return df_latex
