@@ -46,14 +46,14 @@ def plot_faces_3d(faces):
     return
 
 def plot_efficiency_grid(df, statistic="mean", time_limit=600, y_max=650, output_dir="."):
-    df_ncqp = df[df["Instance family"] == "NCQP"].copy()
+    df_scbp = df[df["Instance family"] == "SCBP"].copy()
     sequence_lengths = [24, 48, 96, 168]
     fig, axes = plt.subplots(2, 2, figsize=(10, 7), dpi=150, sharey=True)
     axes = axes.ravel()
     legend_handles = {}
 
     for i, (ax, T) in enumerate(zip(axes, sequence_lengths)):
-        sub_df = df_ncqp[df_ncqp["Sequence length"] == T]
+        sub_df = df_scbp[df_scbp["Sequence length"] == T]
         agg_df = sub_df.groupby(["Problem type", "Solver", "CPWL representation", "Degree of accuracy"], as_index=False).agg(solve_time=("Solve time", statistic))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
@@ -84,13 +84,13 @@ def plot_efficiency_grid(df, statistic="mean", time_limit=600, y_max=650, output
     fig.legend(handles=list(legend_handles.values()), labels=list(legend_handles.keys()), loc="lower center", bbox_to_anchor=(0.5, 0.00), ncol=4, frameon=False)
     fig.tight_layout(rect=[0.02, 0.12, 1.00, 1.00])
     
-    filepath = os.path.join(output_dir, "NCQP_PWL_MILP_efficiency_2x2.png")
+    filepath = os.path.join(output_dir, "SCBP_PWL_MILP_efficiency_2x2.png")
     plt.savefig(filepath, dpi=300, bbox_inches="tight")
     plt.close()
 
 def plot_scalability(df, output_dir="."):
-    df_ncqp = df[df['Instance family'] == 'NCQP'].copy()
-    seq_lengths = sorted(df_ncqp['Sequence length'].dropna().unique())
+    df_scbp = df[df['Instance family'] == 'SCBP'].copy()
+    seq_lengths = sorted(df_scbp['Sequence length'].dropna().unique())
     x = np.array(seq_lengths)
     
     configs = [('QP', 'SCIP', 'QP (SCIP)'), ('QP', 'Gurobi', 'QP (Gurobi)'), ('MILP', 'HiGHS', r'MILP (HiGHS)')]
@@ -99,9 +99,9 @@ def plot_scalability(df, output_dir="."):
     for prob_type, solver, label in configs:
         rates = []
         for seq in seq_lengths:
-            mask = (df_ncqp['Sequence length'] == seq) & (df_ncqp['Problem type'] == prob_type) & (df_ncqp['Solver'] == solver)
-            if prob_type == 'MILP': mask &= (df_ncqp['CPWL representation'] == 'Square') & (df_ncqp['Degree of accuracy'] == 4)
-            subset = df_ncqp[mask]
+            mask = (df_scbp['Sequence length'] == seq) & (df_scbp['Problem type'] == prob_type) & (df_scbp['Solver'] == solver)
+            if prob_type == 'MILP': mask &= (df_scbp['CPWL representation'] == 'Square') & (df_scbp['Degree of accuracy'] == 4)
+            subset = df_scbp[mask]
             rates.append(subset['Is_Optimal'].mean() * 100 if not subset.empty else 0)
             
         ax.plot(x, rates, label=label, color=get_color(solver), marker=MARKERS.get(solver.upper(), "o"), linewidth=2, markersize=8)
@@ -120,7 +120,7 @@ def plot_scalability(df, output_dir="."):
     plt.close()
 
 def plot_dolan_more(df, output_dir="."):
-    df_perf = df[(df['Instance family'] == 'NCQP') & (df['Solver'] == 'HiGHS')].dropna(subset=['Solve time']).copy()
+    df_perf = df[(df['Instance family'] == 'SCBP') & (df['Solver'] == 'HiGHS')].dropna(subset=['Solve time']).copy()
     time_pivot = df_perf.pivot_table(index='Instance', columns='CPWL representation', values='Solve time')
     ratios = time_pivot.divide(time_pivot.min(axis=1), axis=0)
     
@@ -151,7 +151,7 @@ def plot_applicability(df, output_dir="."):
     df_filtered = df[mask_qp | mask_milp].copy()
     agg = df_filtered.groupby(['Instance family', 'Problem type', 'Solver'])['Is_Optimal'].mean().reset_index()
     
-    families = ['NCQP', 'QPLIB']
+    families = ['SCBP', 'QPLIB']
     methods = [('QP', 'Gurobi'), ('QP', 'SCIP'), ('MILP', 'HiGHS')]
     x = np.arange(len(families))
     width = 0.2
@@ -175,7 +175,7 @@ def plot_applicability(df, output_dir="."):
     plt.close()
 
 def plot_approx_gap(df, output_dir="."):
-    df_gap = df[(df["Instance family"] == "NCQP") & (df["Problem type"] == "MILP") & (df["Solver"] == "HiGHS") & (df["CPWL representation"] == "Square") & (df["Degree of accuracy"].isin([1, 2, 3, 4]))].copy()
+    df_gap = df[(df["Instance family"] == "SCBP") & (df["Problem type"] == "MILP") & (df["Solver"] == "HiGHS") & (df["CPWL representation"] == "Square") & (df["Degree of accuracy"].isin([1, 2, 3, 4]))].copy()
     df_gap["Objective CPWL approximation gap (%)"] = ((df_gap["Objective value"] - df_gap["Quadratic objective value"]) / df_gap["Quadratic objective value"]) * 100
     
     degrees = [1, 2, 3, 4]
