@@ -13,6 +13,25 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from ortools.math_opt.python import mathopt
 from src.models import build_NCQP_model, build_model_from_QPLIB
 
+SOLVER_MAP = {
+    'Gurobi': mathopt.SolverType.GUROBI,
+    'HiGHS': mathopt.SolverType.HIGHS,
+    'SCIP': mathopt.SolverType.GSCIP,
+}
+
+def is_solver_available(solver_name: str) -> bool:
+    if solver_name not in SOLVER_MAP:
+        return False
+    with suppress_c_stdout_stderr():
+        try:
+            model = mathopt.Model(name="availability_test")
+            x = model.add_variable(lb=0, ub=1, name="x")
+            model.minimize(x)
+            mathopt.solve(model, SOLVER_MAP[solver_name])
+            return True
+        except Exception:
+            return False
+
 @contextmanager
 def suppress_c_stdout_stderr():
     """Redirects C-level stdout and stderr to devnull."""
@@ -89,7 +108,6 @@ def build_experiment_model(dict_exp):
 def solve_experiment_model(dict_exp, enable_output=False):
     worker_pid = os.getpid()
     
-    solver_map = {'Gurobi': mathopt.SolverType.GUROBI, 'HiGHS': mathopt.SolverType.HIGHS, 'SCIP': mathopt.SolverType.GSCIP}
     threads = dict_exp['Threads'] if dict_exp['Solver'] != 'HiGHS' else None
     params = mathopt.SolveParameters(enable_output=enable_output, 
                                      relative_gap_tolerance=dict_exp['Gap tolerance'], 
@@ -98,7 +116,7 @@ def solve_experiment_model(dict_exp, enable_output=False):
     # Wrap the C++ execution block in the silencer
     with suppress_c_stdout_stderr():
         model, weight, X, Y = build_experiment_model(dict_exp)
-        result = mathopt.solve(model, solver_map[dict_exp['Solver']], params=params)
+        result = mathopt.solve(model, SOLVER_MAP[dict_exp['Solver']], params=params)
     
     status = result.termination.reason.name
     

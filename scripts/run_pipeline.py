@@ -9,7 +9,7 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 from src.data_handling import import_QPLIB_instance_table, down_select_valid_instances
-from src.experiments import build_table_of_experiments, solve_experiments_in_parallel
+from src.experiments import build_table_of_experiments, solve_experiments_in_parallel, is_solver_available
 from src.visualization import (
     load_data,
     plot_efficiency_grid,
@@ -41,10 +41,14 @@ def main():
         df_QPLIB_instances = down_select_valid_instances(df_QPLIB_instances)
         
         # Build the experiment table
+        _milp_solvers = [s for s in ["Gurobi", "SCIP", "HiGHS"] if is_solver_available(s)]
+        _qp_solvers = [s for s in ["Gurobi", "SCIP"] if is_solver_available(s)]
+        if "Gurobi" not in _milp_solvers:
+            print("Gurobi solver not detected - excluding from experiments.")
         df_experiments = build_table_of_experiments(
             qplib_instances=df_QPLIB_instances.index,
-            milp_solvers=["Gurobi", "SCIP", "HiGHS"],
-            qp_solvers=["Gurobi", "SCIP"]
+            milp_solvers=_milp_solvers,
+            qp_solvers=_qp_solvers,
         )
     
         # Configure Run Limits
