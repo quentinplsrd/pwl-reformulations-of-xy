@@ -71,7 +71,7 @@ def add_pwl_constraints(model, x, y, z, COEFFS, EQUATIONS, logarithmic_encoding=
         
     return {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz, 'z_c': z_c, 'bv': bv, 'gv': gv}
 
-def build_NCQP_model(T=48, seed=0, quadratic=True, N=3, partition_method='Square', logarithmic_encoding=False):
+def build_SCBP_model(T=48, seed=0, quadratic=True, N=3, partition_method='Square', logarithmic_encoding=False):
     random.seed(seed)
     
     S_initial = 100.0
@@ -83,7 +83,7 @@ def build_NCQP_model(T=48, seed=0, quadratic=True, N=3, partition_method='Square
     inflow = np.array([random.uniform(10.0, 30.0) for _ in range(T)])
     weight = np.array([random.uniform(50.0, 150.0) for _ in range(T)])
     
-    model = mathopt.Model(name="NCQP")
+    model = mathopt.Model(name="SCBP")
     
     S = [model.add_variable(lb=0.0, ub=S_max, name=f"Storage({t})") for t in range(T)]
     X = [model.add_variable(lb=0.0, ub=X_max, name=f"Allocation({t})") for t in range(T)]
