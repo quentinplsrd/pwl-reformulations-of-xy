@@ -11,7 +11,7 @@ import pandas as pd
 from itertools import product
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from ortools.math_opt.python import mathopt
-from src.models import build_NCQP_model, build_model_from_QPLIB
+from src.models import build_SCBP_model, build_model_from_QPLIB
 
 SOLVER_MAP = {
     'Gurobi': mathopt.SolverType.GUROBI,
@@ -58,13 +58,13 @@ def build_table_of_experiments(seeds=range(10),
                                degrees=[1, 2, 3, 4]):
     
     print("\nBuilding the experiment table")
-    ncqp_instances = pd.DataFrame(product(seeds, sequence_lengths), columns=["Random seed", "Sequence length"])
-    ncqp_instances["Instance"] = "NCQP_T_" + ncqp_instances["Sequence length"].map(lambda x: f"{x:04d}") + "_seed_" + ncqp_instances["Random seed"].map(lambda x: f"{x:03d}")
-    ncqp_instances["Instance family"] = "NCQP"
+    scbp_instances = pd.DataFrame(product(seeds, sequence_lengths), columns=["Random seed", "Sequence length"])
+    scbp_instances["Instance"] = "SCBP_T_" + scbp_instances["Sequence length"].map(lambda x: f"{x:04d}") + "_seed_" + scbp_instances["Random seed"].map(lambda x: f"{x:03d}")
+    scbp_instances["Instance family"] = "SCBP"
 
     qplib = pd.DataFrame({"Instance": qplib_instances, "Instance family": "QPLIB", "Random seed": pd.NA, "Sequence length": pd.NA})
 
-    instances = pd.concat([ncqp_instances, qplib], ignore_index=True)
+    instances = pd.concat([scbp_instances, qplib], ignore_index=True)
 
     milp_cases = instances.merge(pd.DataFrame({"Solver": milp_solvers}), how="cross") \
                           .merge(pd.DataFrame({"CPWL representation": cpwl_representations}), how="cross") \
@@ -90,8 +90,8 @@ def build_experiment_model(dict_exp):
         N = dict_exp["Degree of accuracy"]
         partition_method = dict_exp["CPWL representation"]
     
-    if family == 'NCQP':
-        model, weight, X, Y = build_NCQP_model(T=dict_exp["Sequence length"], seed=dict_exp["Random seed"], 
+    if family == 'SCBP':
+        model, weight, X, Y = build_SCBP_model(T=dict_exp["Sequence length"], seed=dict_exp["Random seed"], 
                                                quadratic=quadratic, N=N, partition_method=partition_method)
     elif family == 'QPLIB':
         file = f"QPLIB_{dict_exp['Instance']}.qplib"
@@ -124,7 +124,7 @@ def solve_experiment_model(dict_exp, enable_output=False):
     quad_objective_value = np.nan
     if result.termination.reason in [mathopt.TerminationReason.OPTIMAL, mathopt.TerminationReason.FEASIBLE]:
         objective_value = result.objective_value()
-        if dict_exp['Instance family'] == 'NCQP':
+        if dict_exp['Instance family'] == 'SCBP':
             X_sol, Y_sol = np.array(result.variable_values(X)), np.array(result.variable_values(Y))
             quad_objective_value = sum(weight * X_sol * Y_sol)
             
