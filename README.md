@@ -1,6 +1,6 @@
 # Piecewise Linear Approximations for Bilinear Reformulations
 
-This repository contains a functional, modular computational pipeline for evaluating and comparing piecewise linear (PWL) approximations in bilinear reformulations (such as those found in NCQP and QPLIB instances). 
+This repository contains a functional, modular computational pipeline for evaluating and comparing piecewise linear (PWL) approximations in bilinear reformulations (such as those found in SCBP and QPLIB instances). 
 
 The pipeline handles automated data acquisition, model generation, parallelized solver execution (via OR-Tools for Gurobi, SCIP, and HiGHS), and artifact visualization.
 
