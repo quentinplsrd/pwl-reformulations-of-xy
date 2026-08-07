@@ -13,7 +13,7 @@ pwl-reformulations/
 │   ├── geometry.py            # Mathematical/computational geometry functions
 │   ├── models.py              # MILP and QP model construction using math_opt
 │   ├── experiments.py         # Parallel execution and solver configuration
-│   └── visualization.py       # Matplotlib plotting and LaTeX table generation
+│   └── visualization.py       # Matplotlib plotting
 ├── scripts/
 │   └── run_pipeline.py        # Top-level orchestration script
 ├── data/                      
