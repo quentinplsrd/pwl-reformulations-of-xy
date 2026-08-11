@@ -4,6 +4,8 @@ This repository contains a functional, modular computational pipeline for evalua
 
 The pipeline handles automated data acquisition, model generation, parallelized solver execution (via OR-Tools for Gurobi, SCIP, and HiGHS), and artifact visualization.
 
+![Alt text](3D_plots.png)
+
 ## Repository Structure
 
 ```text
